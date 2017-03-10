@@ -1,10 +1,9 @@
 package hackerrank;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
+import java.util.PriorityQueue;
 import java.util.Scanner;
-import java.util.TreeSet;
 import java.util.Vector;
 
 public class SynchronousShopping {
@@ -13,22 +12,12 @@ public class SynchronousShopping {
     static int M;
     static int K;
     static Vector<HashMap<Integer, Edge>> neighbor;
-    static TreeSet<State> states;
+    static PriorityQueue<State> states;
     static boolean[] marked;
     static int[] fishTypes;
     static int[][] cost;
     
-    static class StateComparator implements Comparator<State> {
-
-		@Override
-		public int compare(State arg0, State arg1) {
-			if (arg0.edge == arg1.edge && arg0.fishes == arg1.fishes && arg0.cost == arg1.cost) return 0;
-			else if (arg0.cost > arg1.cost) return 1;
-			else return -1;
-		}
-    }
-    
-    static class Edge {
+    static class Edge implements Comparable<Edge> {
     	int from, to;
     	int distance;
     	
@@ -37,16 +26,39 @@ public class SynchronousShopping {
 			this.to = to;
 			this.distance = d;
 		}
+
+		@Override
+		public int compareTo(Edge o) {
+			if (this.distance < o.distance) return -1;
+			else if (this.distance > o.distance) return 1;
+			return 0;
+		}
     }
     
-    static class State {
+    static class State implements Comparable<State> {
     	int edge, fishes, cost;
 
     	public State(int e, int f, int c) {
 			this.edge = e;
 			this.fishes = f;
 			this.cost = c;
-		}  	    	
+		}
+    	
+		@Override
+		public int compareTo(State o) {
+			if (cost > o.cost) return 1;
+			else if (cost < o.cost) return -1;
+			return 0;
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if (!(obj instanceof State)) return false;
+			State s = (State) obj;
+			return s.cost == this.cost && s.edge == this.edge && s.fishes == this.fishes;
+		}
+    	
+    	
     }
     
     static void checkAndQueue(int edge, int fishes, int c) {
@@ -85,12 +97,12 @@ public class SynchronousShopping {
          sc.close();
          
          marked = new boolean[N];
-         states = new TreeSet<SynchronousShopping.State>(new StateComparator());
+         states = new PriorityQueue<SynchronousShopping.State>();
          
          states.add(new State(0, fishTypes[0], 0));
          
          while (!states.isEmpty()) {
-        	 State current = states.pollFirst();
+        	 State current = states.remove();
         	 
         	 marked[current.edge] = true;
         	 for (Edge e : neighbor.get(current.edge).values())

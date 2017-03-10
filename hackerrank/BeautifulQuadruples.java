@@ -20,8 +20,8 @@ public class BeautifulQuadruples {
 			allPairs[i] += allPairs[i-1];
 		
 		int[][] allXOR = new int[3001][4096];
-		for (int i = 1; i <= limits[0]; i++)
-			for (int j = i; j <= limits[1]; j++)
+		for (int i = 1; i < limits[0]; i++)
+			for (int j = i; j < limits[1]; j++)
 				allXOR[j][i^j]++;
 		
 		for (int i = 1; i <= 3000; i++)
@@ -35,4 +35,5 @@ public class BeautifulQuadruples {
 		
 		System.out.println(res);
 	}
+
 }
