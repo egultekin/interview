@@ -1,3 +1,5 @@
+package design.bookingConfRoom;
+
 public class ConferenceRoom {
 	// name
 	// location
