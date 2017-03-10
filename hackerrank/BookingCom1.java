@@ -18,15 +18,15 @@ public class BookingCom1 {
 		
 		Scanner sc = new Scanner(System.in);
 		
-			String line = br.readLine();
-			do {
-				if (line.isEmpty()) break;
-				String[] sides = line.split(" ");
-				if (sides[0].equals(sides[1]) && sides[1].equals(sides[2]) && sides[2].equals(sides[3])) squares++;
-				else if (sides[0].equals(sides[2]) && sides[1].equals(sides[3])) rectangles++;
-				else polygons++;
-			} while (br.ready() && (line = br.readLine()) != null);
-		
+//			String line = br.readLine();
+//			do {
+//				if (line.isEmpty()) break;
+//				String[] sides = line.split(" ");
+//				if (sides[0].equals(sides[1]) && sides[1].equals(sides[2]) && sides[2].equals(sides[3])) squares++;
+//				else if (sides[0].equals(sides[2]) && sides[1].equals(sides[3])) rectangles++;
+//				else polygons++;
+//			} while (br.ready() && (line = br.readLine()) != null);
+//		
 		System.out.println(squares + " " + rectangles + " " + polygons);
 	} 
 }

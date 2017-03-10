@@ -1,75 +1,63 @@
-package brutefbacktrack;
+package btbf;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import dtypes.TravelGroup;
 
 public class BridgeCrossing {
+	private int minTime = Integer.MAX_VALUE;
 	
-	private int min = Integer.MAX_VALUE;
+		private int minTimeRec(int[] source, int[] target, int accumulatedTime) {
+		if (null != source && source.length == 2) return new TravelGroup(source[0], source[1]).slower() + accumulatedTime;
+		
+		for (TravelGroup direction1 : possible(source, 2)) {
+			int timeInDirection1 = direction1.slower();
+			int timeInDirection2 = 0;
+			int[] afterDeparture = direction1.departs(source);
+			int[] afterArrival = direction1.arrives(target);
+
+			for (TravelGroup direction2 : possible(afterArrival, 1)) {
+				timeInDirection2 = direction2.slower();
+				int candidate = minTimeRec(direction2.arrives(afterDeparture), direction2.departs(afterArrival), timeInDirection1 + timeInDirection2 + accumulatedTime);
+				if (candidate < minTime) minTime = candidate;
+			}
+		}
+		
+		return Integer.MAX_VALUE;
+	}
 	
 	public int minTime(int[] times) {
-		Vector<Integer> passed = new Vector<Integer>();
+		int[] source = Arrays.copyOf(times, times.length);
+		int[] target = new int[0];
 		
-		Vector<Integer> waiting = new Vector<Integer>();
-		for (int i=0; i<times.length; i++)
-			waiting.add(new Integer(times[i]));
+		minTimeRec(source, target, 0);
+		if (times.length == 1) minTime = times[0];
 		
-		helper(0, passed, waiting);
-		return min;
+		return minTime;
 	}
 	
-	private Vector<Integer[]> choose(Vector<Integer> waiting) {
-		Vector<Integer[]> chosen = new Vector<Integer[]>();
-		for (int i=0; i<waiting.size()-1; i++) 
-			for (int j=i+1; j<waiting.size(); j++)  
-				chosen.add(new Integer[] { waiting.get(i), waiting.get(j) });
-		return chosen;
-	}
-	
-	private int helper(int time, Vector<Integer> passed, Vector<Integer> waiting) {
-		if (waiting.size() == 0) return 0;
-		if (waiting.size() == 1) return waiting.get(0);
-		int timeChosen = 0;
+	private Iterable<TravelGroup> possible(int[] group, int groupSize) {
+		if (null == group) return new ArrayList<TravelGroup>();
+		if (groupSize < 1 || groupSize > 2 || group.length < 1) throw new IllegalArgumentException("Group size shall be either 1 or 2.");
+		ArrayList<TravelGroup> resultList = new ArrayList<TravelGroup>();
 		
-		for (Integer[] chosen : choose(waiting)) {
-				Integer first = chosen[0];
-				Integer second = chosen[1];
-			
-				Vector<Integer> tempPassed = new Vector<Integer>(passed);
-				Vector<Integer> tempWaiting = new Vector<Integer>(waiting);
-				tempPassed.add(first);
-				tempPassed.add(second);
-				tempWaiting.remove(first);
-				tempWaiting.remove(second);
-				timeChosen = Math.max(first, second);
-				
-				if (tempWaiting.size() > 0) {
-					Integer back = removeMin(tempPassed);
-					tempWaiting.add(back);
-					timeChosen+=back;
-				}
-				
-				timeChosen += helper(time+timeChosen, tempPassed, tempWaiting);
-				if (timeChosen + time < min) { min = timeChosen + time; }
+		Arrays.sort(group);
+		if (groupSize == 1) {
+			for (int next : group) resultList.add(new TravelGroup(next));
+		} else {
+			for (int i = 0; i < group.length - 1; i++)
+				for (int j = i+1; j < group.length; j++)
+					resultList.add(new TravelGroup(group[i], group[j]));
 		}
 		
-		return timeChosen;
-	}
-	
-	private Integer removeMin(Vector<Integer> v) {
-		int min = 0;
-		for (int i = 1; i < v.size(); i++) {
-			if (v.get(i) < v.get(min)) min = i;
-		}
-		
-		Integer result = v.get(min);
-		v.remove(min);
-		return result;
+		return resultList;
 	}
 
 	public static void main(String[] args) {
-		int[] times = { 1, 2, 3, 50, 99, 100 };
+		int[] times = {100, 2, 3, 50, 99, 1};
 		
-		System.out.format("Passes in %d steps\n", new BridgeCrossing().minTime(times));
+		System.out.println(new BridgeCrossing().minTime(times));
 	}
 
 }

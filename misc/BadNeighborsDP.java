@@ -1,4 +1,4 @@
-package interview;
+package misc;
 
 public class BadNeighborsDP {
 	private int[] maxDonations;

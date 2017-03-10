@@ -1,7 +1,8 @@
-package brutefbacktrack;
+package btbf;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
+
+import java.util.Vector;
 
 public class MNS {
 	private static final int SIZE = 9;
@@ -55,27 +56,41 @@ public class MNS {
 		
 	}
 	
-	private int permute(int[] numbers, int swap) {
-		for (int i = swap+1; i < numbers.length - 1; i++) {
-			int temp = numbers[swap];
-			numbers[swap] = numbers[i];
-			numbers[i] = temp;
-			
-			Candidate c = new Candidate(numbers);
-			if (c.isMNS() && !found.contains(c)) found.add(c);
-			
-		}
+	private boolean contains(Candidate c) {
+		for (int i = 0; i < found.size(); i++) if (c.equals(found.elementAt(i))) return true;
+		return false;
 	}
 	
-	Set<Candidate> found = new HashSet<>();
+	private int permute(int[] numbers, int swap) {
+		if (swap == numbers.length) {
+			Candidate c = new Candidate(numbers);
+			if (c.isMNS() && !contains(c)) found.add(c);
+		} else {
+			for (int i = swap; i < numbers.length; i++)			
+			{	
+				int[] newA = Arrays.copyOf(numbers, numbers.length);
+				int temp = newA[swap];
+				newA[swap] = newA[i];
+				newA[i] = temp;
+
+				permute(newA, swap+1);
+			}
+		}
+		
+		return found.size();
+	}
+	
+	Vector<Candidate> found = new Vector<MNS.Candidate>();
 
 	public int combos(int[] numbers) {
-		return -1;
+		return permute(numbers, 0);
 	}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		int[] numbers = 	
+			{1, 1, 1, 1, 1, 1, 1, 1, 4};
+		
+		System.out.println(new MNS().combos(numbers));
 	}
 
 }

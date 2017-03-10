@@ -1,4 +1,4 @@
-package interview;
+package misc;
 
 public class test {
     static void StairCase(int n) {
