@@ -1,9 +1,9 @@
-package btbf;
+package brutefbacktrack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import dtypes.TravelGroup;
+import commontypes.TravelGroup;
 
 public class BridgeCrossing {
 	private int minTime = Integer.MAX_VALUE;

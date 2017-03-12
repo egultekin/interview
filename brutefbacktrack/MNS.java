@@ -1,4 +1,4 @@
-package btbf;
+package brutefbacktrack;
 
 import java.util.Arrays;
 
