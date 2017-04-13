@@ -51,29 +51,26 @@ class ConvertBSTIntoDoubleLinkedList {
 	  return t;
   }
 
-  public void toDoubleLinkedList(BiNode node) {
+  public void toDoubleLinkedListRecursive(BiNode node) {
 	  if (null == node) return;
-	  toDoubleLinkedList(node.node1);
+	  toDoubleLinkedListRecursive(node.node1);
 	  addTail(node);
-	  toDoubleLinkedList(node.node2);
-//    if (null == node) return node;
+	  toDoubleLinkedListRecursive(node.node2);
+  }
+  
+  public void toDoubleLinkedListIterative(BiNode node) {
+    if (null == node) return;
+	       
+    while (!s.isEmpty() || null != node.node2 || null != node.node1) {
+      if (null != node.node1) node = traverseLeft(node);
+      else {    	  
+        addTail(node);
+        if (null != node.node2) node = node.node2;
+        else if (!s.isEmpty()) node = s.pop();
+      }
+    }
     
-//    if (null != node.node1) node = traverseLeft(node);
-//    else {
-//    	addTail(node);
-//    	if (null != node.node2) node = node.node2;
-//    }
-//    
-//    while (!s.isEmpty() || null != node.node2) {
-//      if (null != node.node1) node = traverseLeft(node);
-//      else {    	  
-//        addTail(node);
-//        if (null != node.node2) node = node.node2;
-//        else if (!s.isEmpty()) node = s.pop();
-//      }
-//    }
-//
-//    return head;
+    addTail(node);
   }
 
   public static void main(String[] args) {
@@ -83,9 +80,8 @@ class ConvertBSTIntoDoubleLinkedList {
     node1.node2 = node2;
     node2.node1 = node3;
 
-    node1.print();
     ConvertBSTIntoDoubleLinkedList sol = new ConvertBSTIntoDoubleLinkedList();
-    sol.toDoubleLinkedList(node1);
+    sol.toDoubleLinkedListIterative(node1);
     sol.head.print();
     
     ConvertBSTIntoDoubleLinkedList.BiNode node11 = new ConvertBSTIntoDoubleLinkedList.BiNode(15);
@@ -102,15 +98,22 @@ class ConvertBSTIntoDoubleLinkedList {
     node14.node2 = node16;
     
     ConvertBSTIntoDoubleLinkedList sol2 = new ConvertBSTIntoDoubleLinkedList();
-    sol2.toDoubleLinkedList(node11);
+    sol2.toDoubleLinkedListIterative(node11);
     sol2.head.print();
     
     BiNode node17 = new BiNode(5);
     BiNode node18 = new BiNode(19);
     node17.node2 = node18;
     ConvertBSTIntoDoubleLinkedList sol3 = new ConvertBSTIntoDoubleLinkedList();
-    sol3.toDoubleLinkedList(node17);
+    sol3.toDoubleLinkedListIterative(node17);
     sol3.head.print();
+    
+    BiNode node19 = new BiNode(29);
+    BiNode node20 = new BiNode(35);
+    node19.node2 = node20;
+    ConvertBSTIntoDoubleLinkedList sol4 = new ConvertBSTIntoDoubleLinkedList();
+    sol4.toDoubleLinkedListIterative(node19);
+    sol4.head.print();
 
   }
 }
