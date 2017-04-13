@@ -6,3 +6,7 @@
 /LinkedListRemoveDups$SingleLinkedListIntNode.class
 /ListLevelDFS.class
 /ListLevelDFS$Node.class
+/LRUCache.class
+/LRUCache$Node.class
+/ConvertBSTIntoDoubleLinkedList.class
+/ConvertBSTIntoDoubleLinkedList$BiNode.class
