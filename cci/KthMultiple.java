@@ -16,17 +16,25 @@ class KthMultiple {
     
     multiples.add((long)1);
 
+    long limitThrees = 0, limitFives = 0; 
     while (multiples.size() < k) {
       if (threes.peekFirst() < fives.peekFirst() && threes.peekFirst() < sevens.peekFirst()) {
         long three = threes.pollFirst();
-        threes.add(three*3);
-        threes.add(three*5);
-        threes.add(three*7);
+        if (three*3 > limitThrees) threes.add(three*3);
+        if (three*5 > limitThrees) threes.add(three*5);
+        if (three*7 > limitThrees) {
+        	threes.add(three*7);
+        	limitThrees = three*7;
+        }
+
         multiples.add(three);
       } else if (fives.peekFirst() < threes.peekFirst() && fives.peekFirst() < sevens.peekFirst()) {
         long five = fives.pollFirst();
-        fives.add(five*5);
-        fives.add(five*7);
+        if (five*5 > limitFives)fives.add(five*5);
+        if (five*7 > limitFives) {
+        	fives.add(five*7);
+        	limitFives = five*7;
+        }
         multiples.add(five);
       } else {
         long seven = sevens.pollFirst();
