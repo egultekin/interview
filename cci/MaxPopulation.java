@@ -42,35 +42,47 @@ class MaxPopulation {
 		NavigableMap<Integer, AgeRange> alreadyBorn = map.headMap(dead, true);
 		int sum = 0;
 		for (Integer key : alreadyBorn.keySet()) {
-			AgeRange val = map.get(key);
-			if (val.dead >= born) {
-				sum += val.population;
-				earliestDead.add(new AgeRange(key, val.dead, val.population));
-				map.put(key, new AgeRange(key, born, val.population));
+			AgeRange registered = map.get(key);
+			if (registered.dead >= born) {
+				// select oldest people who are alive when the new person is born  
+				sum += registered.population;
+				// order them starting the first to be dead 
+				earliestDead.add(new AgeRange(key, registered.dead, registered.population));
+				// squeeze the oldest term to [term.born, born)
+				map.put(key, new AgeRange(key, born-1, registered.population));
 			}
 			
 		}
 		
+		// add the term for the new person
 		earliestDead.add(new AgeRange(born, dead, 1));
 		sum++;
 
-		int start = born;
+		int endLastTerm = born-1;
 		while (!earliestDead.isEmpty()) {
 			AgeRange earliest = earliestDead.poll();
-			map.put(start, new AgeRange(start, earliest.dead, sum));
+			// starting from the birth date of the new person
+			// distribute alive population into succeeding terms as people die
+			if (earliest.dead > endLastTerm) {
+				map.put(endLastTerm+1, new AgeRange(endLastTerm+1, earliest.dead, sum));
+				endLastTerm = earliest.dead;
+			}
 			sum -= earliest.population;
-			start = earliest.dead+1;
 		}
 	}
 	
 	public int maxPopulation() {
 		int max = Integer.MIN_VALUE;
 		int year = Integer.MIN_VALUE;
-		for (Map.Entry<Integer, AgeRange> item : map.entrySet())
+		StringBuilder builder = new StringBuilder();
+		for (Map.Entry<Integer, AgeRange> item : map.entrySet()) {
+			builder.append(String.format("Year: %d-%d Population: %d\n", item.getKey(), item.getValue().dead, item.getValue().population));
 			if (item.getValue().population > max) {
 				max = item.getValue().population;
 				year = item.getKey(); 
 			}
+		}
+		System.out.println(builder.toString());
 		return year;
 	}
 	
