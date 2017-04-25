@@ -21,54 +21,37 @@ class MaxPopulation {
 		}
 	}
 
-	private PriorityQueue<AgeRange> earliestDead;
 	private TreeMap<Integer, AgeRange> map;
 	
 	public MaxPopulation() {
-		earliestDead = new PriorityQueue<AgeRange>(
-			new Comparator<AgeRange>() {
-				@Override
-				public int compare(AgeRange o1, AgeRange o2) {
-					if (o1.dead < o2.dead) return -1;
-					else if (o1.dead > o2.dead) return 1;
-					return 0;
-				}
-			}
-		);
 		map = new TreeMap<Integer, AgeRange>();
 	}
 	
 	public void newPerson(int born, int dead) {
 		NavigableMap<Integer, AgeRange> alreadyBorn = map.headMap(dead, true);
-		int sum = 0;
-		for (Integer key : alreadyBorn.keySet()) {
-			AgeRange registered = map.get(key);
+		int now = born;
+		boolean modified = false;
+		Collection<AgeRange> keys = alreadyBorn.values();
+		Set<AgeRange> modifications = new HashSet<AgeRange>();
+		for (AgeRange registered : keys) {
+			Integer key = registered.born;
 			if (registered.dead >= born) {
-				// select oldest people who are alive when the new person is born  
-				sum += registered.population;
-				// order them starting the first to be dead 
-				earliestDead.add(new AgeRange(key, registered.dead, registered.population));
-				// squeeze the oldest term to [term.born, born)
-				map.put(key, new AgeRange(key, born-1, registered.population));
+				// if the new population counts for the selected term
+				modified = true;
+				if (key < born) {
+					map.put(key, new AgeRange(key, born-1, registered.population));
+					now = born;
+				} else now = key;
+				
+				modifications.add(new AgeRange(now, Math.min(registered.dead, dead), registered.population+1));
+				if (registered.dead > dead)
+					modifications.add(new AgeRange(dead+1, registered.dead, registered.population));
+				else 
+					modifications.add(new AgeRange(registered.dead+1, dead, 1));
 			}
-			
 		}
-		
-		// add the term for the new person
-		earliestDead.add(new AgeRange(born, dead, 1));
-		sum++;
-
-		int endLastTerm = born-1;
-		while (!earliestDead.isEmpty()) {
-			AgeRange earliest = earliestDead.poll();
-			// starting from the birth date of the new person
-			// distribute alive population into succeeding terms as people die
-			if (earliest.dead > endLastTerm) {
-				map.put(endLastTerm+1, new AgeRange(endLastTerm+1, earliest.dead, sum));
-				endLastTerm = earliest.dead;
-			}
-			sum -= earliest.population;
-		}
+		if (!modified) map.put(born, new AgeRange(born, dead, 1));
+		for (AgeRange modification : modifications) map.put(modification.born, modification);
 	}
 	
 	public int maxPopulation() {
