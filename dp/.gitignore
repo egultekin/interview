@@ -7,3 +7,7 @@
 /SchoolAssembly.class
 /ShortPalindromes.class
 /TestCase.class
+/ShortestPath$Edge.class
+/ShortestPath.class
+/ShortestPathConstrained$Edge.class
+/ShortestPathConstrained.class
