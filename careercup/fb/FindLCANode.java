@@ -15,7 +15,7 @@ class FindLCANode {
     @Override
     public boolean equals(Object to) {
       if (to instanceof Node) {
-        if (this.label == to.label)
+        if (this.label == ((Node)to).label)
           return true;
       }
       return false;
@@ -24,11 +24,14 @@ class FindLCANode {
 
   public static Node lca(Node root, Node n1, Node n2) {
     boolean foundN1, foundN2;
+    foundN1 = foundN2 = false;
     Node found = null;
     if (root.equals(n1)) {
-      foundN1 == true;
+      System.out.printf("Found node %d, root %d\n", n1.label, root.label);
+      foundN1 = true;
       found = n1;
     } else if (root.equals(n2)) {
+      System.out.printf("Found node %d, root %d\n", n2.label, root.label);
       foundN2 = true;
       found = n2;
     }
@@ -36,10 +39,11 @@ class FindLCANode {
     Iterator<Node> it = root.neighbors.iterator();
     while (!(foundN1 && foundN2) && it.hasNext()) {
       Node next = it.next();
-      found = lca(next, n1, n2);
-      if (null != found) {
-        if (found.equals(n1)) foundN1 = true;
-        else if (found.equals(n2)) foundN2 = true;
+      Node check = lca(next, n1, n2);
+      if (null != check) {
+        if (check.equals(n1)) foundN1 = true;
+        else if (check.equals(n2)) foundN2 = true;
+        found = check;
       }
     }
 
@@ -56,6 +60,7 @@ class FindLCANode {
     Node c32 = new Node(32);
     Node c311 = new Node(311);
     Node c321 = new Node(321);
+    Node c4 = new Node(4);
     c32.neighbors.add(c321);
     c31.neighbors.add(c311);
     c3.neighbors.add(c31);
@@ -64,7 +69,7 @@ class FindLCANode {
     root.neighbors.add(c2);
     root.neighbors.add(c3);
 
-    Node n = lca(root, c311, c321);
+    Node n = lca(root, c1, c2);
     System.out.printf("LCA is %d\n", n.label);
   }
 }
