@@ -93,5 +93,16 @@ class MaxPathSum {
     n3.right = n32;
     n32.right = n322;
     mps.findMaxPath(n3);
+
+    Node n4 = new Node(-5);
+    Node n41 = new Node(-7);
+    Node n42 = new Node(-4);
+    Node n421 = new Node(-16);
+    Node n422 = new Node(-22);
+    n4.left = n41;
+    n4.right = n42;
+    n42.left = n421;
+    n42.right = n422;
+    mps.findMaxPath(n4);
   }
 }
