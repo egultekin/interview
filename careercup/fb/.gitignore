@@ -37,3 +37,15 @@
 /MazeWay$Point.class
 /MazeWay.class
 /Main.class
+/FindAndRemoveCycle.class
+/FindAndRemoveCycle$DirectedGraphNode.class
+/FindLCANode.class
+/FindLCANode$Node.class
+/FindLongestNRepeating.class
+/IntervalInsert.class
+/IntervalInsert$Interval.class
+/RobotWalk.class
+/MaxPathSum.class
+/MaxPathSum$Node.class
+/PalindromeChecker.class
+/PalindromeChecker$Interval.class
