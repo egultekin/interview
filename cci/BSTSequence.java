@@ -72,6 +72,11 @@ public class BSTSequence {
 		BSTNode<Integer> c = new BSTNode<Integer>(1);
 		BSTNode<Integer> l = new BSTNode<Integer>(3, c, null);
 		BSTNode<Integer> root = new BSTNode<Integer>(5, l, r);
-		printSequence(root);
+		//printSequence(root);
+		
+		BSTNode<Integer> a = new BSTNode<Integer>(1);
+		BSTNode<Integer> b = new BSTNode<Integer>(3);
+		BSTNode<Integer> d = new BSTNode<Integer>(2, a, b);
+		printSequence(d);
 	}
 }
